@@ -416,16 +416,16 @@ Modifica il file \`.env\` per personalizzare:
 
 \`\`\`bash
 # Database
-POSTGRES_PASSWORD=your-secure-password
+POSTGRES_PASSWORD=password
 
 # Security
-SECRET_KEY=your-secret-key
-GDPR_ENCRYPTION_KEY=your-encryption-key
+SECRET_KEY=secret
+GDPR_ENCRYPTION_KEY=encription
 
 # Email
 SMTP_HOST=your-smtp-host
 SMTP_USER=your-smtp-user
-SMTP_PASSWORD=your-smtp-password
+SMTP_PASSWORD=smtp-password
 \`\`\`
 
 ## 📊 Monitoring
