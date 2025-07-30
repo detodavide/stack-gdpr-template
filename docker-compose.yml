@@ -9,10 +9,10 @@ services:
     ports:
       - "${API_PORT:-8000}:8000"
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-secure123}@postgres:5432/${POSTGRES_DB:-stakc_app}
-      - REDIS_URL=redis://redis:6379
-      - SECRET_KEY=${SECRET_KEY:-your-super-secret-key-change-in-production}
-      - GDPR_ENCRYPTION_KEY=${GDPR_ENCRYPTION_KEY:-gdpr-encryption-key-32-chars-min}
+      # 🚨 SECURITY: No secrets in compose file
+      - DATABASE_URL_FILE=/run/secrets/db_url
+      - SECRET_KEY_FILE=/run/secrets/secret_key
+      - GDPR_ENCRYPTION_KEY_FILE=/run/secrets/gdpr_key
       - PROJECT_NAME=${PROJECT_NAME:-STAKC Template}
       - PROJECT_TEMPLATE=${PROJECT_TEMPLATE:-base}
       - ENABLED_PLUGINS=${ENABLED_PLUGINS:-gdpr,security,analytics,audit,data_breach}
@@ -23,6 +23,18 @@ services:
       - ./project_templates:/app/project_templates
       - gdpr_exports:/app/exports
       - audit_logs:/app/logs
+    # 🚨 SECURITY: Read-only filesystem
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/logs
+secrets:
+  db_url:
+    file: .secrets/db_url
+  secret_key:
+    file: .secrets/secret_key
+  gdpr_key:
+    file: .secrets/gdpr_key
     depends_on:
       - postgres
       - redis

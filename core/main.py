@@ -175,11 +175,49 @@ async def log_requests(request: Request, call_next):
     logger.info(f"📤 Response: {response.status_code} {response.body.decode()}")
     return response
 
-# Error handling middleware
+
+# HOTFIX: Exception handling robusto
+import traceback
+import uuid
+from pydantic import ValidationError
+
 @app.exception_handler(Exception)
-async def general_exception_handler(request: Request, exc: Exception):
-    logger.error(f"❌ Error: {exc}")
+async def production_exception_handler(request: Request, exc: Exception):
+    """HOTFIX: Exception handling sicuro per produzione."""
+    logger.error(
+        f"UNHANDLED EXCEPTION: {type(exc).__name__}: {str(exc)}\n"
+        f"Request: {request.method} {request.url}\n"
+        f"Traceback: {traceback.format_exc()}"
+    )
+    if settings.DEBUG:
+        # Development: mostra errore
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": "Internal Server Error",
+                "detail": str(exc),
+                "type": type(exc).__name__
+            }
+        )
+    else:
+        # Production: response generica
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": "Internal Server Error",
+                "message": "Si è verificato un errore. Riprova più tardi.",
+                "request_id": str(uuid.uuid4())
+            }
+        )
+
+@app.exception_handler(ValidationError)
+async def validation_exception_handler(request: Request, exc: ValidationError):
+    """HOTFIX: Validation errors specifici."""
+    logger.warning(f"Validation error: {exc}")
     return JSONResponse(
-        status_code=500,
-        content={"detail": "Internal Server Error"}
+        status_code=422,
+        content={
+            "error": "Validation Error",
+            "details": exc.errors()
+        }
     )

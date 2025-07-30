@@ -17,15 +17,16 @@ cd demo-blog
 
 # Esegui lo script di setup
 bash setup-project.sh --name=demo-blog --template=blog --plugins=gdpr,security,analytics --frontend=nextjs_base --domain=localhost
+
+# 🔒 Applica hotfix di sicurezza
+bash scripts/security/fix_defaults.sh
 ```
 
-## 3. Controllo e modifica file .env
+## 3. Gestione segreti e configurazione ambiente
 
-- Apri `.env` generato nella root del progetto
-- Verifica e personalizza:
-  - PASSWORD e chiavi (SECRET_KEY, GDPR_ENCRYPTION_KEY)
-  - SMTP per email
-  - PORT e DOMAIN
+- I segreti (SECRET_KEY, GDPR_ENCRYPTION_KEY, DB_PASSWORD) sono ora generati in `.secrets/` e gestiti tramite Docker secrets.
+- `.env.example` viene aggiornato automaticamente, ma in produzione usa solo i file in `.secrets/`.
+- Personalizza SMTP, PORT, DOMAIN in `.env` o tramite variabili d'ambiente.
 
 ## 4. Installazione dipendenze frontend
 
@@ -49,12 +50,13 @@ docker-compose up -d
   ```bash
   docker-compose ps
   ```
-- Controlla i log:
+- Controlla i log strutturati:
   ```bash
   docker-compose logs -f api
   ```
-- Verifica healthcheck:
+- Verifica healthcheck robusto:
   - http://localhost/health
+  - http://localhost/health/deep
 
 ## 7. Accesso applicazione
 
@@ -98,9 +100,10 @@ pytest tests/core/test_gdpr_e2e.py
 
 ## 12. Note e troubleshooting
 
-- Tutti i plugin sono modulari e attivabili/disattivabili
+- Tutti i plugin sono modulari e attivabili/disattivabili (sandboxed, whitelist, path validation)
 - Backup e audit automatici su database
-- Sicurezza: rate limiting, bot detection, IP blocking, security headers
+- Sicurezza: rate limiting fail-safe, bot detection, IP blocking, security headers
+- Health check e logging strutturato per monitoring
 - Se una metrica non appare, verifica che la tabella corrispondente sia presente nel database
 - Consulta i log per errori e debugging
 

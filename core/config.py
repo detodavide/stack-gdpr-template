@@ -6,7 +6,8 @@ Configurazione centralizzata con supporto per plugin e compliance GDPR.
 """
 
 from pydantic_settings import BaseSettings
-from pydantic import Field, validator
+from pydantic import Field, validator, ValidationError
+import logging
 from typing import List, Optional, Dict, Any
 import os
 from pathlib import Path
@@ -163,6 +164,36 @@ class Settings(BaseSettings):
             raise ValueError(f'Plugin non validi: {invalid_plugins}. Disponibili: {available_plugins}')
         return v
     
+    
+    # HOTFIX: CORS strict validation
+    @validator('CORS_ORIGINS')
+    def validate_cors_origins(cls, v, values):
+        """HOTFIX: Valida CORS strict."""
+        environment = values.get('ENVIRONMENT', 'development')
+        if environment == 'production':
+            # 🚨 PRODUZIONE: Zero wildcards
+            if '*' in v:
+                raise ValueError('CORS wildcard (*) VIETATO in production')
+            # 🚨 PRODUZIONE: Solo HTTPS
+            for origin in v:
+                if not origin.startswith('https://') and origin != 'http://localhost:3000':
+                    raise ValueError(f'CORS: Solo HTTPS consentito in prod: {origin}')
+        elif environment == 'staging':
+            # 🚨 STAGING: Limitato
+            if '*' in v:
+                import logging
+                logging.getLogger(__name__).warning('⚠️ CORS wildcard in staging - NON per produzione')
+        return v
+
+    # HOTFIX: Secret key validation
+    @validator('SECRET_KEY')
+    def validate_secret_key(cls, v):
+        """HOTFIX: Valida secret key."""
+        if v in ['your-super-secret-key', 'change-me', 'secret']:
+            raise ValueError('🚨 SECRET_KEY di default VIETATA')
+        if len(v) < 32:
+            raise ValueError('🚨 SECRET_KEY troppo corta (min 32 chars)')
+        return v
     @validator('GDPR_RETENTION_DAYS')
     def validate_gdpr_retention(cls, v):
         """Valida periodo retention GDPR."""
@@ -179,12 +210,34 @@ class Settings(BaseSettings):
             raise ValueError('Lunghezza minima password deve essere almeno 8 caratteri')
         return v
     
+    # HOTFIX: CORS strict validation
     @validator('CORS_ORIGINS')
     def validate_cors_origins(cls, v, values):
-        """Valida origini CORS."""
+        """HOTFIX: Valida CORS strict."""
         environment = values.get('ENVIRONMENT', 'development')
-        if environment == 'production' and '*' in v:
-            raise ValueError('CORS wildcard (*) non consentito in production')
+        if environment == 'production':
+            # 🚨 PRODUZIONE: Zero wildcards
+            if '*' in v:
+                raise ValueError('CORS wildcard (*) VIETATO in production')
+            # 🚨 PRODUZIONE: Solo HTTPS
+            for origin in v:
+                if not origin.startswith('https://') and origin != 'http://localhost:3000':
+                    raise ValueError(f'CORS: Solo HTTPS consentito in prod: {origin}')
+        elif environment == 'staging':
+            # 🚨 STAGING: Limitato
+            if '*' in v:
+                import logging
+                logging.getLogger(__name__).warning('⚠️ CORS wildcard in staging - NON per produzione')
+        return v
+
+    # HOTFIX: Secret key validation
+    @validator('SECRET_KEY')
+    def validate_secret_key(cls, v):
+        """HOTFIX: Valida secret key."""
+        if v in ['your-super-secret-key', 'change-me', 'secret']:
+            raise ValueError('🚨 SECRET_KEY di default VIETATA')
+        if len(v) < 32:
+            raise ValueError('🚨 SECRET_KEY troppo corta (min 32 chars)')
         return v
     
     # ===== COMPUTED PROPERTIES =====
