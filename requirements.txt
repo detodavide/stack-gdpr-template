@@ -10,4 +10,5 @@ python-dotenv
 pydantic
 pytest
 httpx
+pydantic-settings
 # Add other dependencies as needed
