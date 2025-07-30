@@ -311,6 +311,7 @@ done
 
 # Initialize database
 echo -e "${BLUE}🗄️  Preparazione database...${NC}"
+mkdir -p scripts/database
 cat > scripts/database/init.sql << EOF
 -- STAKC GDPR Template Database Initialization
 -- Project: $PROJECT_NAME

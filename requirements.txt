@@ -1,0 +1,13 @@
+# Python requirements for stack-gdpr-template
+fastapi
+uvicorn
+psycopg2-binary
+sqlalchemy
+alembic
+celery
+redis
+python-dotenv
+pydantic
+pytest
+httpx
+# Add other dependencies as needed

@@ -1,8 +1,13 @@
 project:
   name: "blog"
   template: "blog"
+  title: Demo Blog
+  frontend: nextjs_base
+  domain: localhost
 plugins:
   gdpr:
     enabled: true
   security:
+    enabled: true
+  analytics:
     enabled: true
