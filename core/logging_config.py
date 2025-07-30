@@ -16,14 +16,30 @@ class StructuredFormatter(logging.Formatter):
             "function": record.funcName,
             "line": record.lineno
         }
+        # Request correlation ID
         if hasattr(record, 'request_id'):
             log_entry["request_id"] = record.request_id
+        # User context
         if hasattr(record, 'user_id'):
             log_entry["user_id"] = record.user_id
+        # Plugin context
         if hasattr(record, 'plugin'):
             log_entry["plugin"] = record.plugin
+        # GDPR context
+        if hasattr(record, 'gdpr_operation'):
+            log_entry["gdpr_operation"] = record.gdpr_operation
+            log_entry["data_subject_id"] = getattr(record, 'data_subject_id', None)
+        # Security context
+        if hasattr(record, 'security_event'):
+            log_entry["security_event"] = record.security_event
+            log_entry["source_ip"] = getattr(record, 'source_ip', None)
+            log_entry["user_agent"] = getattr(record, 'user_agent', None)
+        # Exception handling
         if record.exc_info:
             log_entry["exception"] = self.formatException(record.exc_info)
+        # Performance metrics
+        if hasattr(record, 'duration_ms'):
+            log_entry["duration_ms"] = record.duration_ms
         return json.dumps(log_entry)
 
 def setup_logging():

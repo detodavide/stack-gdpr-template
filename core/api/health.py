@@ -1,3 +1,24 @@
+@router.get("/health/plugins")
+async def plugin_health_check():
+    """Check specifico per ogni plugin."""
+    plugin_status = {}
+    for plugin_name in settings.ENABLED_PLUGINS:
+        try:
+            # Test plugin-specific health
+            if plugin_name == "gdpr_plugin":
+                db = SessionLocal()
+                db.execute(text("SELECT COUNT(*) FROM consents"))
+                db.close()
+                plugin_status[plugin_name] = {"status": "healthy", "tables": "accessible"}
+            elif plugin_name == "security_plugin":
+                r = redis.Redis.from_url(settings.REDIS_URL)
+                r.ping()
+                plugin_status[plugin_name] = {"status": "healthy", "redis": "accessible"}
+            else:
+                plugin_status[plugin_name] = {"status": "unknown"}
+        except Exception as e:
+            plugin_status[plugin_name] = {"status": "unhealthy", "error": str(e)}
+    return {"plugins": plugin_status}
 
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse

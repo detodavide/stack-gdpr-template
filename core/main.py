@@ -134,7 +134,7 @@ app = FastAPI(
     middleware=[
         # CORS middleware
         CORSMiddleware(
-            allow_origins=["*"],
+            allow_origins=settings.CORS_ORIGINS if settings.ENVIRONMENT != "production" else [],
             allow_credentials=True,
             allow_methods=["*"],
             allow_headers=["*"],
