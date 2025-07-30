@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gdpr-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gdpr-app
+  template:
+    metadata:
+      labels:
+        app: gdpr-app
+    spec:
+      containers:
+      - name: app
+        image: gdpr-app:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        - name: DATABASE_URL
+          value: "postgresql://user:pass@prod-host:5432/gdpr_db"
+        - name: REDIS_URL
+          value: "redis://prod-host:6379/0"

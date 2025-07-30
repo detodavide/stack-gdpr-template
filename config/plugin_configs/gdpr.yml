@@ -1,0 +1,10 @@
+gdpr:
+  enabled: true
+  features:
+    consent_management: true
+    data_export: true
+    anonymization: true
+    audit_trail: true
+  settings:
+    retention_days: 1095
+    consent_expiry_days: 365

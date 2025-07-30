@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Blog Frontend</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Simple Blog Example (GDPR-compliant)</h1>
+  <div id="user-form">
+    <h2>Register User</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="text" id="name" placeholder="Name">
+    <button onclick="registerUser()">Register</button>
+  </div>
+  <div id="post-form">
+    <h2>Create Post</h2>
+    <input type="text" id="title" placeholder="Title">
+    <textarea id="content" placeholder="Content"></textarea>
+    <input type="number" id="author_id" placeholder="Author ID">
+    <button onclick="createPost()">Create</button>
+  </div>
+  <div id="posts">
+    <h2>Posts</h2>
+    <button onclick="fetchPosts()">Refresh</button>
+    <ul id="posts-list"></ul>
+  </div>
+  <div id="gdpr">
+    <h2>GDPR Export</h2>
+    <input type="number" id="gdpr_user_id" placeholder="User ID">
+    <button onclick="exportGDPR()">Export Data</button>
+    <pre id="gdpr-data"></pre>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>

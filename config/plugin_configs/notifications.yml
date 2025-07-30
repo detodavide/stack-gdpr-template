@@ -1,0 +1,6 @@
+notifications:
+  enabled: false
+  features:
+    email: true
+    slack: true
+    sms: true

@@ -1,0 +1,9 @@
+security:
+  enabled: true
+  features:
+    rate_limiting: true
+    bot_detection: true
+    ip_blocking: true
+  settings:
+    rate_limit_per_minute: 60
+    bot_detection_enabled: true

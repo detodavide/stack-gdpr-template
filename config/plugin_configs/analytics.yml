@@ -1,0 +1,5 @@
+analytics:
+  enabled: false
+  features:
+    dashboard: true
+    reporting: true

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ecommerce Shop Frontend</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Ecommerce Shop Example (GDPR-compliant)</h1>
+  <div id="user-form">
+    <h2>Register User</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="text" id="name" placeholder="Name">
+    <button onclick="registerUser()">Register</button>
+  </div>
+  <div id="product-form">
+    <h2>Add Product</h2>
+    <input type="text" id="product_name" placeholder="Product Name">
+    <input type="text" id="product_desc" placeholder="Description">
+    <input type="number" id="product_price" placeholder="Price" step="0.01">
+    <button onclick="addProduct()">Add</button>
+  </div>
+  <div id="order-form">
+    <h2>Place Order</h2>
+    <input type="number" id="order_user_id" placeholder="User ID">
+    <input type="number" id="order_product_id" placeholder="Product ID">
+    <input type="number" id="order_quantity" placeholder="Quantity">
+    <button onclick="placeOrder()">Order</button>
+  </div>
+  <div id="products">
+    <h2>Products</h2>
+    <button onclick="fetchProducts()">Refresh</button>
+    <ul id="products-list"></ul>
+  </div>
+  <div id="orders">
+    <h2>Orders</h2>
+    <button onclick="fetchOrders()">Refresh</button>
+    <ul id="orders-list"></ul>
+  </div>
+  <div id="gdpr">
+    <h2>GDPR Export</h2>
+    <input type="number" id="gdpr_user_id" placeholder="User ID">
+    <button onclick="exportGDPR()">Export Data</button>
+    <pre id="gdpr-data"></pre>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>

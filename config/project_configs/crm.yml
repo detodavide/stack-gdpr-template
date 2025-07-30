@@ -1,0 +1,8 @@
+project:
+  name: "crm"
+  template: "crm"
+plugins:
+  gdpr:
+    enabled: true
+  security:
+    enabled: true

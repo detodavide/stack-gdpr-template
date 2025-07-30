@@ -1,0 +1,8 @@
+project:
+  name: "ecommerce"
+  template: "ecommerce"
+plugins:
+  gdpr:
+    enabled: true
+  security:
+    enabled: true

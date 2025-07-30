@@ -1,0 +1,8 @@
+project:
+  name: "blog"
+  template: "blog"
+plugins:
+  gdpr:
+    enabled: true
+  security:
+    enabled: true
